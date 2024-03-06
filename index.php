@@ -40,7 +40,7 @@
 				        			<span class="fa fa-phone"></span>
 				        		</div>
 				        		<div class="text pl-4">
-					            <p><span>Phone:</span> <a href="tel://1234567920">+91 921-901-8686</a></p>
+					            <p><span>Phone:</span> <a href="tel://+91921-901-86860">+91 921-901-8686</a></p>
 					          </div>
 				          </div>
 				        	<div class="dbox w-100 d-flex align-items-start">
@@ -92,7 +92,7 @@
 											</div>
 											<div class="col-md-12">
 												<div class="form-group">
-													<input type="submit" value="Send Message" class="btn btn-primary">
+													<input type="submit" name="send" value="Send" class="btn btn-primary">
 													<div class="submitting"></div>
 												</div>
 											</div>
@@ -115,4 +115,53 @@
 
 	</body>
 </html>
+<?php
+//Import PHPMailer classes into the global namespace
+//These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
+if(isset($_POST['send']))
+{
+	$name = $_POST['name'];
+	$subject = $_POST['subject'];
+	$email = $_POST['email'];
+	$$Message = $_POST['Message'];
+	
+	
+//Load Composer's autoloader
+require 'PHPMailer\Exception';
+require 'PHPMailer\Exception';
+
+
+//Create an instance; passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
+try {
+    //Server settings
+                       //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'serenity.travels.in@gmail.com';                     //SMTP username
+    $mail->Password   = 'Safari@321';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+    //Recipients
+    $mail->setFrom('serenity.travels.in@gmail.com', 'Mailer');
+    $mail->addAddress('contact@serenitytravels.co', 'Joe User');     //Add a recipient
+
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Contact Form';
+    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+    
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+}
+}
